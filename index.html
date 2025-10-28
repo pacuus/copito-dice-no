@@ -59,6 +59,13 @@
     button:hover {
       background-color: #a81818;
     }
+
+    .social-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
@@ -89,6 +96,12 @@
     <button id="downloadBtn">⬇️ Descargar</button>
   </div>
 
+  <div class="social-buttons">
+    <button id="whatsappBtn">📱 WhatsApp</button>
+    <button id="facebookBtn">📘 Facebook</button>
+    <button id="instagramBtn">📸 Instagram</button>
+  </div>
+
   <script>
     const canvas = document.getElementById('afiche');
     const ctx = canvas.getContext('2d');
@@ -96,9 +109,14 @@
     const fotoInput = document.getElementById('foto');
     const plantillaSelect = document.getElementById('plantilla');
     const downloadBtn = document.getElementById('downloadBtn');
-    let foto = null;
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    const facebookBtn = document.getElementById('facebookBtn');
+    const instagramBtn = document.getElementById('instagramBtn');
 
-    // Plantillas
+    let foto = null;
+    let logoImagen = new Image();
+    logoImagen.src = 'logo.png';
+
     const plantillas = {
       A: {
         fondo: '#fdfaf4',
@@ -120,7 +138,6 @@
       }
     };
 
-    // 👉 Función para texto multilinea centrado
     function dibujarTextoMultilinea(ctx, texto, x, y, maxWidth, lineHeight) {
       const palabras = texto.split(' ');
       let linea = '';
@@ -139,9 +156,7 @@
       const totalHeight = lineas.length * lineHeight;
       const startY = y - totalHeight / 2 + lineHeight / 2;
 
-      lineas.forEach((l, i) => {
-        ctx.fillText(l, x, startY + i * lineHeight);
-      });
+      lineas.forEach((l, i) => ctx.fillText(l, x, startY + i * lineHeight));
     }
 
     function dibujar() {
@@ -155,16 +170,15 @@
       ctx.font = plantilla.fuenteTexto;
       dibujarTextoMultilinea(ctx, plantilla.fraseSuperior, canvas.width / 2, 100, 520, 45);
 
-      // Nombre mascota (puede ser largo)
+      // Nombre mascota
       const nombre = (nombreInput.value || 'Tu mascota').toUpperCase();
       ctx.font = plantilla.fuenteTitulo;
       dibujarTextoMultilinea(ctx, `${nombre} DICE`, canvas.width / 2, 250, 520, 60);
 
-      // Círculo con foto
+      // Foto circular
       const circleX = canvas.width / 2;
       const circleY = 520;
       const circleRadius = 180;
-
       ctx.beginPath();
       ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
       ctx.closePath();
@@ -181,6 +195,7 @@
         const imgHeight = foto.height * scale;
         const imgX = circleX - imgWidth / 2;
         const imgY = circleY - imgHeight / 2;
+
         ctx.save();
         ctx.beginPath();
         ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
@@ -190,7 +205,7 @@
         ctx.restore();
       }
 
-      // "NO"
+      // Texto “NO”
       ctx.fillStyle = plantilla.colorNo;
       ctx.font = 'bold 100px Arial';
       ctx.fillText('NO', canvas.width / 2, 850);
@@ -201,12 +216,18 @@
       dibujarTextoMultilinea(ctx, 'A LA CONSTITUYENTE', canvas.width / 2, 920, 500, 35);
       ctx.font = '20px Arial';
       dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 980, 500, 28);
+
+      // Logo en esquina inferior derecha
+      if (logoImagen.complete) {
+        const logoWidth = 120;
+        const logoHeight = (logoImagen.height / logoImagen.width) * logoWidth;
+        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 20, logoWidth, logoHeight);
+      }
     }
 
     // Eventos
     nombreInput.addEventListener('input', dibujar);
     plantillaSelect.addEventListener('change', dibujar);
-
     fotoInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -219,11 +240,29 @@
       reader.readAsDataURL(file);
     });
 
+    logoImagen.onload = dibujar;
+
     downloadBtn.addEventListener('click', () => {
       const link = document.createElement('a');
       link.download = 'mi_mascota_dice_no.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
+    });
+
+    // Botones compartir
+    whatsappBtn.addEventListener('click', () => {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent('Mira el afiche que generé con mi mascota 🐾 #NoALaConstituyente');
+      window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
+    });
+
+    facebookBtn.addEventListener('click', () => {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    });
+
+    instagramBtn.addEventListener('click', () => {
+      alert('Para compartir en Instagram, guarda la imagen y súbela como historia 📸');
     });
 
     dibujar();
