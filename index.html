@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi mascota dice NO a la Constituyente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f8f5ee;
+      margin: 0;
+      padding: 0;
+    }
+    #poster {
+      position: relative;
+      width: 360px;
+      height: 640px;
+      margin: 20px auto;
+      background-color: #f8f5ee;
+      color: #2b2018;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .top-text, .bottom-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      left: 0;
+      font-weight: bold;
+    }
+    .top-text {
+      top: 20px;
+      font-size: 18px;
+    }
+    .bottom-text {
+      bottom: 20px;
+      font-size: 14px;
+    }
+    .main-text {
+      position: absolute;
+      top: 100px;
+      width: 100%;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .circle {
+      position: absolute;
+      top: 180px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #3a2b21;
+      background: #fff;
+    }
+    .circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .no-text {
+      position: absolute;
+      top: 400px;
+      width: 100%;
+      font-size: 60px;
+      font-weight: 900;
+      color: #c82b1a;
+    }
+    .footer-text {
+      position: absolute;
+      bottom: 50px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    #controls {
+      margin-top: 10px;
+    }
+    button {
+      background-color: #2b2018;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    button img {
+      width: 20px;
+      height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Genera tu afiche: "Mi mascota dice NO a la Constituyente"</h2>
+  <div id="poster">
+    <div class="top-text">¡MIS DERECHOS ESTÁN EN RIESGO!</div>
+    <div class="main-text" id="petName">COPITO DICE</div>
+    <div class="circle"><img id="petPhoto" src="" alt="Foto de mascota" /></div>
+    <div class="no-text">NO</div>
+    <div class="footer-text">A LA CONSTITUYENTE</div>
+    <div class="bottom-text">La Constitución actual protege los derechos de la naturaleza y de los animales (art. 71)</div>
+  </div>
+
+  <div id="controls">
+    <input type="text" id="nameInput" placeholder="Nombre de tu mascota" />
+    <input type="file" id="photoInput" accept="image/*" />
+    <button id="downloadBtn"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/download.svg" alt="descargar" />Descargar</button>
+    <button id="shareBtn"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="whatsapp" />WhatsApp</button>
+    <button id="shareInstagram"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="instagram" />Instagram Stories</button>
+    <button id="shareFacebook"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="facebook" />Facebook</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    const nameInput = document.getElementById('nameInput');
+    const photoInput = document.getElementById('photoInput');
+    const petName = document.getElementById('petName');
+    const petPhoto = document.getElementById('petPhoto');
+    const shareBtn = document.getElementById('shareBtn');
+    const shareInstagram = document.getElementById('shareInstagram');
+    const shareFacebook = document.getElementById('shareFacebook');
+
+    nameInput.addEventListener('input', () => {
+      petName.textContent = nameInput.value.toUpperCase() + ' DICE';
+    });
+
+    photoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          petPhoto.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      html2canvas(document.getElementById('poster')).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'mi_mascota_dice_no.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    });
+
+    shareBtn.addEventListener('click', () => {
+      html2canvas(document.getElementById('poster')).then(canvas => {
+        canvas.toBlob(blob => {
+          const file = new File([blob], 'mi_mascota_dice_no.png', { type: 'image/png' });
+          const shareData = {
+            files: [file],
+            text: '¡Mi mascota dice NO a la Constituyente! 🐾',
+          };
+          if (navigator.canShare && navigator.canShare(shareData)) {
+            navigator.share(shareData).catch(console.error);
+          } else {
+            const url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent('¡Mi mascota dice NO a la Constituyente!');
+            window.open(url, '_blank');
+          }
+        });
+      });
+    });
+
+    shareInstagram.addEventListener('click', () => {
+      html2canvas(document.getElementById('poster')).then(canvas => {
+        const imageData = canvas.toDataURL('image/png');
+        const instagramUrl = `https://www.instagram.com/create/story/?image=${encodeURIComponent(imageData)}`;
+        window.open(instagramUrl, '_blank');
+      });
+    });
+
+    shareFacebook.addEventListener('click', () => {
+      html2canvas(document.getElementById('poster')).then(canvas => {
+        const dataUrl = canvas.toDataURL('image/png');
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(dataUrl)}`;
+        window.open(facebookUrl, '_blank');
+      });
+    });
+  </script>
+</body>
+</html>
