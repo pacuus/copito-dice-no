@@ -59,23 +59,17 @@
     button:hover {
       background-color: #a81818;
     }
-
-    .icon {
-      margin-right: 6px;
-    }
   </style>
 </head>
 <body>
 
   <h1>Genera tu afiche:<br>“Mi mascota dice NO a la Constituyente”</h1>
 
-  <!-- 🐾 Aquí irá tu logotipo -->
   <img id="logo" src="logo.png" alt="Logo del movimiento" />
 
   <div>
     <label for="nombre">Nombre de tu mascota:</label>
     <input type="text" id="nombre" placeholder="Ej. Copito" />
-
     <input type="file" id="foto" accept="image/*" />
   </div>
 
@@ -98,12 +92,10 @@
   <script>
     const canvas = document.getElementById('afiche');
     const ctx = canvas.getContext('2d');
-
     const nombreInput = document.getElementById('nombre');
     const fotoInput = document.getElementById('foto');
     const plantillaSelect = document.getElementById('plantilla');
     const downloadBtn = document.getElementById('downloadBtn');
-
     let foto = null;
 
     // Plantillas
@@ -128,18 +120,7 @@
       }
     };
 
-    // 👉 Función auxiliar: ajusta tamaño de fuente automáticamente
-    function ajustarTexto(ctx, texto, maxWidth, baseFontSize, minFontSize) {
-      let fontSize = baseFontSize;
-      do {
-        ctx.font = `bold ${fontSize}px Arial`;
-        if (ctx.measureText(texto).width <= maxWidth) break;
-        fontSize -= 2;
-      } while (fontSize > minFontSize);
-      return fontSize;
-    }
-
-    // 👉 Función para dividir texto en varias líneas si es necesario
+    // 👉 Función para texto multilinea centrado
     function dibujarTextoMultilinea(ctx, texto, x, y, maxWidth, lineHeight) {
       const palabras = texto.split(' ');
       let linea = '';
@@ -155,9 +136,11 @@
         }
       }
       lineas.push(linea.trim());
+      const totalHeight = lineas.length * lineHeight;
+      const startY = y - totalHeight / 2 + lineHeight / 2;
 
       lineas.forEach((l, i) => {
-        ctx.fillText(l, x, y + i * lineHeight);
+        ctx.fillText(l, x, startY + i * lineHeight);
       });
     }
 
@@ -165,20 +148,19 @@
       const plantilla = plantillas[plantillaSelect.value];
       ctx.fillStyle = plantilla.fondo;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Texto superior ajustable
-      ctx.fillStyle = plantilla.colorTexto;
-      const fontSizeSup = ajustarTexto(ctx, plantilla.fraseSuperior, 520, 40, 20);
-      ctx.font = `bold ${fontSizeSup}px Arial`;
       ctx.textAlign = 'center';
-      dibujarTextoMultilinea(ctx, plantilla.fraseSuperior, canvas.width / 2, 100, 520, fontSizeSup + 5);
 
-      // Nombre de mascota
-      const nombre = nombreInput.value.toUpperCase() || 'TU MASCOTA';
+      // Frase superior
+      ctx.fillStyle = plantilla.colorTexto;
+      ctx.font = plantilla.fuenteTexto;
+      dibujarTextoMultilinea(ctx, plantilla.fraseSuperior, canvas.width / 2, 100, 520, 45);
+
+      // Nombre mascota (puede ser largo)
+      const nombre = (nombreInput.value || 'Tu mascota').toUpperCase();
       ctx.font = plantilla.fuenteTitulo;
-      ctx.fillText(`${nombre} DICE`, canvas.width / 2, 250);
+      dibujarTextoMultilinea(ctx, `${nombre} DICE`, canvas.width / 2, 250, 520, 60);
 
-      // Círculo para la foto
+      // Círculo con foto
       const circleX = canvas.width / 2;
       const circleY = 520;
       const circleRadius = 180;
@@ -195,33 +177,30 @@
           (circleRadius * 2) / foto.width,
           (circleRadius * 2) / foto.height
         );
-
         const imgWidth = foto.width * scale;
         const imgHeight = foto.height * scale;
-
         const imgX = circleX - imgWidth / 2;
         const imgY = circleY - imgHeight / 2;
-
         ctx.save();
         ctx.beginPath();
         ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
         ctx.closePath();
         ctx.clip();
-
         ctx.drawImage(foto, imgX, imgY, imgWidth, imgHeight);
         ctx.restore();
       }
 
-      // Texto "NO"
+      // "NO"
       ctx.fillStyle = plantilla.colorNo;
       ctx.font = 'bold 100px Arial';
       ctx.fillText('NO', canvas.width / 2, 850);
 
-      // Frase inferior ajustable
+      // Frase inferior
       ctx.fillStyle = plantilla.colorTexto;
-      const fontSizeInf = ajustarTexto(ctx, plantilla.fraseInferior, 500, 26, 16);
-      ctx.font = `bold ${fontSizeInf}px Arial`;
-      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 970, 500, fontSizeInf + 4);
+      ctx.font = 'bold 30px Arial';
+      dibujarTextoMultilinea(ctx, 'A LA CONSTITUYENTE', canvas.width / 2, 920, 500, 35);
+      ctx.font = '20px Arial';
+      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 980, 500, 28);
     }
 
     // Eventos
