@@ -65,7 +65,24 @@
       justify-content: center;
       gap: 10px;
       margin-bottom: 20px;
+      margin-top: 10px;
     }
+
+    .social-label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .social-buttons button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
   </style>
 </head>
 <body>
@@ -96,10 +113,11 @@
     <button id="downloadBtn">⬇️ Descargar</button>
   </div>
 
+  <div class="social-label">Comparte tu afiche</div>
   <div class="social-buttons">
-    <button id="whatsappBtn">📱 WhatsApp</button>
-    <button id="facebookBtn">📘 Facebook</button>
-    <button id="instagramBtn">📸 Instagram</button>
+    <button id="whatsappBtn" style="background-color:#25D366; color:white;">📱 WhatsApp</button>
+    <button id="facebookBtn" style="background-color:#1877F2; color:white;">📘 Facebook</button>
+    <button id="instagramBtn" style="background-color:#C13584; color:white;">📸 Instagram</button>
   </div>
 
   <script>
@@ -170,7 +188,7 @@
       ctx.font = plantilla.fuenteTexto;
       dibujarTextoMultilinea(ctx, plantilla.fraseSuperior, canvas.width / 2, 100, 520, 45);
 
-      // Nombre mascota
+      // Nombre mascota con salto de línea si es largo
       const nombre = (nombreInput.value || 'Tu mascota').toUpperCase();
       ctx.font = plantilla.fuenteTitulo;
       dibujarTextoMultilinea(ctx, `${nombre} DICE`, canvas.width / 2, 250, 520, 60);
@@ -210,18 +228,18 @@
       ctx.font = 'bold 100px Arial';
       ctx.fillText('NO', canvas.width / 2, 850);
 
-      // Frase inferior
+      // Frase inferior, subida unos píxeles
       ctx.fillStyle = plantilla.colorTexto;
       ctx.font = 'bold 30px Arial';
-      dibujarTextoMultilinea(ctx, 'A LA CONSTITUYENTE', canvas.width / 2, 920, 500, 35);
+      dibujarTextoMultilinea(ctx, 'A LA CONSTITUYENTE', canvas.width / 2, 910, 500, 35);
       ctx.font = '20px Arial';
-      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 980, 500, 28);
+      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 970, 500, 28);
 
-      // Logo en esquina inferior derecha
+      // Logo bajado unos píxeles para no sobreponerse
       if (logoImagen.complete) {
         const logoWidth = 120;
         const logoHeight = (logoImagen.height / logoImagen.width) * logoWidth;
-        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 20, logoWidth, logoHeight);
+        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 40, logoWidth, logoHeight);
       }
     }
 
@@ -249,20 +267,22 @@
       link.click();
     });
 
-    // Botones compartir
+    // Compartir en redes
     whatsappBtn.addEventListener('click', () => {
-      const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent('Mira el afiche que generé con mi mascota 🐾 #NoALaConstituyente');
+      const dataUrl = canvas.toDataURL('image/png');
+      const text = encodeURIComponent('¡Mira el afiche de mi mascota 🐾 #NoALaConstituyente!');
+      const url = encodeURIComponent(dataUrl);
       window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
     });
 
     facebookBtn.addEventListener('click', () => {
-      const url = encodeURIComponent(window.location.href);
+      const dataUrl = canvas.toDataURL('image/png');
+      const url = encodeURIComponent(dataUrl);
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
     });
 
     instagramBtn.addEventListener('click', () => {
-      alert('Para compartir en Instagram, guarda la imagen y súbela como historia 📸');
+      alert('Para compartir en Instagram, guarda la imagen y súbela desde la app 📸');
     });
 
     dibujar();
