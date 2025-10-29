@@ -4,13 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi mascota dice NO</title>
-
-  <!-- 🔹 Fuentes de Google -->
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-
   <style>
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Arial', sans-serif;
       text-align: center;
       background-color: #f9f7f2;
       margin: 0;
@@ -20,28 +16,12 @@
     h1 {
       margin-top: 20px;
       color: #222;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.4em;
     }
 
     #logo {
       width: 120px;
       margin: 10px auto;
       display: block;
-    }
-
-    /* 🔹 Redes sociales debajo del logo */
-    .social-links {
-      margin-bottom: 20px;
-    }
-
-    .social-links a {
-      display: inline-block;
-      margin: 0 10px;
-      text-decoration: none;
-      color: #d72626;
-      font-weight: bold;
-      font-size: 18px;
     }
 
     #preview-container {
@@ -79,25 +59,24 @@
     button:hover {
       background-color: #a81818;
     }
+
+    .social-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
 
   <h1>Genera tu afiche:<br>“Mi mascota dice NO a la Constituyente”</h1>
 
-  <!-- 🐾 Logotipo superior -->
   <img id="logo" src="logo.png" alt="Logo del movimiento" />
-
-  <!-- 🔗 Redes sociales -->
-  <div class="social-links">
-    <a href="TU_ENLACE_FACEBOOK" target="_blank">Facebook</a> |
-    <a href="TU_ENLACE_INSTAGRAM" target="_blank">Instagram</a>
-  </div>
 
   <div>
     <label for="nombre">Nombre de tu mascota:</label>
     <input type="text" id="nombre" placeholder="Ej. Copito" />
-
     <input type="file" id="foto" accept="image/*" />
   </div>
 
@@ -117,20 +96,27 @@
     <button id="downloadBtn">⬇️ Descargar</button>
   </div>
 
+  <div class="social-buttons">
+    <button id="whatsappBtn">📱 WhatsApp</button>
+    <button id="facebookBtn">📘 Facebook</button>
+    <button id="instagramBtn">📸 Instagram</button>
+  </div>
+
   <script>
     const canvas = document.getElementById('afiche');
     const ctx = canvas.getContext('2d');
-
     const nombreInput = document.getElementById('nombre');
     const fotoInput = document.getElementById('foto');
     const plantillaSelect = document.getElementById('plantilla');
     const downloadBtn = document.getElementById('downloadBtn');
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    const facebookBtn = document.getElementById('facebookBtn');
+    const instagramBtn = document.getElementById('instagramBtn');
 
     let foto = null;
-    const logoImagen = new Image();
-    logoImagen.src = 'logo.png'; // usa el archivo del repositorio
+    let logoImagen = new Image();
+    logoImagen.src = 'logo.png';
 
-    // 🔹 Plantillas
     const plantillas = {
       A: {
         fondo: '#fdfaf4',
@@ -138,8 +124,8 @@
         colorNo: '#d72626',
         fraseSuperior: '¡MIS DERECHOS ESTÁN EN RIESGO!',
         fraseInferior: 'La Constitución actual protege los derechos de la naturaleza y de los animales (art. 71)',
-        fuenteTitulo: 'bold 70px "Bebas Neue"',
-        fuenteTexto: 'bold 40px Montserrat',
+        fuenteTitulo: 'bold 60px Arial',
+        fuenteTexto: 'bold 40px Arial',
       },
       B: {
         fondo: '#eaf3f8',
@@ -147,20 +133,19 @@
         colorNo: '#0074d9',
         fraseSuperior: '¡DEFENDAMOS JUNTOS NUESTROS DERECHOS!',
         fraseInferior: 'Tu mascota también dice NO a la Constituyente',
-        fuenteTitulo: 'bold 70px "Bebas Neue"',
-        fuenteTexto: 'bold 40px Montserrat',
+        fuenteTitulo: 'bold 60px Verdana',
+        fuenteTexto: 'bold 40px Verdana',
       }
     };
 
-    function dividirTexto(texto, maxWidth) {
+    function dibujarTextoMultilinea(ctx, texto, x, y, maxWidth, lineHeight) {
       const palabras = texto.split(' ');
-      const lineas = [];
       let linea = '';
+      const lineas = [];
 
       for (let palabra of palabras) {
         const prueba = linea + palabra + ' ';
-        const ancho = ctx.measureText(prueba).width;
-        if (ancho > maxWidth && linea !== '') {
+        if (ctx.measureText(prueba).width > maxWidth && linea !== '') {
           lineas.push(linea.trim());
           linea = palabra + ' ';
         } else {
@@ -168,29 +153,29 @@
         }
       }
       lineas.push(linea.trim());
-      return lineas;
+      const totalHeight = lineas.length * lineHeight;
+      const startY = y - totalHeight / 2 + lineHeight / 2;
+
+      lineas.forEach((l, i) => ctx.fillText(l, x, startY + i * lineHeight));
     }
 
     function dibujar() {
       const plantilla = plantillas[plantillaSelect.value];
       ctx.fillStyle = plantilla.fondo;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = 'center';
 
-      // 🔹 Frase superior
+      // Frase superior
       ctx.fillStyle = plantilla.colorTexto;
       ctx.font = plantilla.fuenteTexto;
-      ctx.textAlign = 'center';
-      const lineasSup = dividirTexto(plantilla.fraseSuperior, 500);
-      lineasSup.forEach((linea, i) => {
-        ctx.fillText(linea, canvas.width / 2, 100 + i * 40);
-      });
+      dibujarTextoMultilinea(ctx, plantilla.fraseSuperior, canvas.width / 2, 100, 520, 45);
 
-      // 🔹 Nombre
-      const nombre = nombreInput.value.toUpperCase() || 'TU MASCOTA';
+      // Nombre mascota
+      const nombre = (nombreInput.value || 'Tu mascota').toUpperCase();
       ctx.font = plantilla.fuenteTitulo;
-      ctx.fillText(`${nombre} DICE`, canvas.width / 2, 260);
+      dibujarTextoMultilinea(ctx, `${nombre} DICE`, canvas.width / 2, 250, 520, 60);
 
-      // 🔹 Círculo de la foto
+      // Foto circular
       const circleX = canvas.width / 2;
       const circleY = 520;
       const circleRadius = 180;
@@ -210,6 +195,7 @@
         const imgHeight = foto.height * scale;
         const imgX = circleX - imgWidth / 2;
         const imgY = circleY - imgHeight / 2;
+
         ctx.save();
         ctx.beginPath();
         ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
@@ -219,41 +205,29 @@
         ctx.restore();
       }
 
-      // 🔹 Texto "NO"
+      // Texto “NO”
       ctx.fillStyle = plantilla.colorNo;
-      ctx.font = 'bold 160px "Bebas Neue"';
+      ctx.font = 'bold 100px Arial';
       ctx.fillText('NO', canvas.width / 2, 850);
 
-      // 🔹 Frases inferiores
+      // Frase inferior
       ctx.fillStyle = plantilla.colorTexto;
-      ctx.font = 'bold 36px Montserrat';
-      ctx.fillText('A LA CONSTITUYENTE', canvas.width / 2, 920);
-      ctx.font = '24px Montserrat';
-      const lineasInf = dividirTexto(plantilla.fraseInferior, 500);
-      lineasInf.forEach((linea, i) => {
-        ctx.fillText(linea, canvas.width / 2, 970 + i * 30);
-      });
+      ctx.font = 'bold 30px Arial';
+      dibujarTextoMultilinea(ctx, 'A LA CONSTITUYENTE', canvas.width / 2, 920, 500, 35);
+      ctx.font = '20px Arial';
+      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 980, 500, 28);
 
-      // 🔹 Logo semitransparente
+      // Logo en esquina inferior derecha
       if (logoImagen.complete) {
         const logoWidth = 120;
         const logoHeight = (logoImagen.height / logoImagen.width) * logoWidth;
-        ctx.save();
-        ctx.globalAlpha = 0.5; // 50% de transparencia
-        ctx.drawImage(
-          logoImagen,
-          canvas.width - logoWidth - 20,
-          canvas.height - logoHeight - 20,
-          logoWidth,
-          logoHeight
-        );
-        ctx.restore();
+        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 20, logoWidth, logoHeight);
       }
     }
 
+    // Eventos
     nombreInput.addEventListener('input', dibujar);
     plantillaSelect.addEventListener('change', dibujar);
-
     fotoInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -266,11 +240,29 @@
       reader.readAsDataURL(file);
     });
 
+    logoImagen.onload = dibujar;
+
     downloadBtn.addEventListener('click', () => {
       const link = document.createElement('a');
       link.download = 'mi_mascota_dice_no.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
+    });
+
+    // Botones compartir
+    whatsappBtn.addEventListener('click', () => {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent('Mira el afiche que generé con mi mascota 🐾 #NoALaConstituyente');
+      window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
+    });
+
+    facebookBtn.addEventListener('click', () => {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    });
+
+    instagramBtn.addEventListener('click', () => {
+      alert('Para compartir en Instagram, guarda la imagen y súbela como historia 📸');
     });
 
     dibujar();
