@@ -206,7 +206,7 @@
       ctx.font = plantilla.fuenteTexto;
       dibujarTextoMultilinea(ctx, plantilla.fraseSuperior, canvas.width / 2, 100, 520, 45);
 
-      // Nombre mascota con ajuste de tamaño si es muy largo
+      // Nombre mascota
       const nombre = (nombreInput.value || 'Tu mascota').toUpperCase();
       ctx.font = plantilla.fuenteTitulo;
       dibujarTextoMultilinea(ctx, `${nombre} DICE`, canvas.width / 2, 250, 520, 60, 60);
@@ -236,23 +236,23 @@
         ctx.restore();
       }
 
-      // NO y A LA CONSTITUYENTE más juntos
+      // Texto "NO A LA CONSTITUYENTE"
       ctx.fillStyle = plantilla.colorNo;
-      ctx.font = 'bold 100px Arial';
-      ctx.fillText('NO', canvas.width / 2, 820);
-      ctx.font = 'bold 32px Arial';
-      ctx.fillText('A LA CONSTITUYENTE', canvas.width / 2, 880);
+      ctx.font = 'bold 120px Arial';
+      ctx.fillText('NO', canvas.width / 2, 780);
+      ctx.font = 'bold 40px Arial';
+      ctx.fillText('A LA CONSTITUYENTE', canvas.width / 2, 845);
 
-      // Frase inferior más grande
+      // Frase inferior (más grande y más abajo)
       ctx.fillStyle = plantilla.colorTexto;
-      ctx.font = '22px Arial';
-      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 960, 500, 28);
+      ctx.font = '26px Arial';
+      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 1040, 520, 32);
 
-      // Logo un poco más abajo
+      // Logo (20 píxeles más abajo)
       if (logoImagen.complete) {
         const logoWidth = 120;
         const logoHeight = (logoImagen.height / logoImagen.width) * logoWidth;
-        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 10, logoWidth, logoHeight);
+        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight + 15, logoWidth, logoHeight);
       }
     }
 
@@ -282,7 +282,7 @@
 
     // Botones compartir
     whatsappBtn.addEventListener('click', () => {
-      alert('Para compartir en WhatsApp, primero debes descargar la imagen y enviarla desde tu teléfono.');
+      alert('Para compartir en WhatsApp, primero descarga la imagen y envíala desde tu teléfono.');
     });
 
     facebookBtn.addEventListener('click', () => {
