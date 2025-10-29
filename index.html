@@ -24,33 +24,14 @@
       display: block;
     }
 
-    /* Bloque de redes sociales debajo del logo */
-    #social-links-page {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
+    .redes-pagina {
+      margin: 10px 0 20px 0;
     }
 
-    #social-links-page span {
-      font-weight: bold;
-      font-size: 16px;
+    .redes-pagina img {
+      width: 30px;
+      margin: 0 5px;
     }
-
-    #social-links-page a {
-      display: inline-block;
-      width: 36px;
-      height: 36px;
-      transition: transform 0.2s;
-    }
-
-    #social-links-page a:hover {
-      transform: scale(1.1);
-    }
-
-    .social-fb { fill: #1877F2; }
-    .social-ig { fill: #C13584; }
 
     #preview-container {
       background: #fff;
@@ -95,6 +76,11 @@
       margin-bottom: 20px;
       margin-top: 10px;
     }
+
+    .comparte-texto {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -103,14 +89,13 @@
 
   <img id="logo" src="logo.png" alt="Logo del movimiento" />
 
-  <!-- Bloque redes sociales página -->
-  <div id="social-links-page">
-    <span>Síguenos:</span>
-    <a href="TU_ENLACE_FACEBOOK" target="_blank" aria-label="Facebook">
-      <svg class="social-fb" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.6 0 0 .6 0 1.325v21.351C0 23.4.6 24 1.325 24h11.49v-9.294H9.692V11.03h3.123V8.413c0-3.1 1.894-4.788 4.662-4.788 1.325 0 2.463.098 2.795.142v3.24l-1.918.001c-1.505 0-1.796.716-1.796 1.765v2.316h3.587l-.467 3.676h-3.12V24h6.116C23.4 24 24 23.4 24 22.675V1.325C24 .6 23.4 0 22.675 0z"/></svg>
+  <div class="redes-pagina">
+    <!-- Reemplaza los href con tus enlaces -->
+    <a href="TU_ENLACE_FACEBOOK" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook">
     </a>
-    <a href="TU_ENLACE_INSTAGRAM" target="_blank" aria-label="Instagram">
-      <svg class="social-ig" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.325.975.975 1.263 2.242 1.325 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.325 3.608-.975.975-2.242 1.263-3.608 1.325-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.325-.975-.975-1.263-2.242-1.325-3.608C2.175 15.747 2.163 15.367 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.325-3.608C4.533 2.583 5.8 2.295 7.166 2.233 8.432 2.175 8.812 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.773.13 4.653.388 3.703 1.338c-.95.95-1.208 2.07-1.266 3.349C2.014 5.968 2 6.377 2 9.636v4.728c0 3.259.014 3.668.072 4.948.058 1.279.316 2.399 1.266 3.349.95.95 2.07 1.208 3.349 1.266 1.28.058 1.689.072 4.948.072s3.668-.014 4.948-.072c1.279-.058 2.399-.316 3.349-1.266.95-.95 1.208-2.07 1.266-3.349.058-1.28.072-1.689.072-4.948V9.636c0-3.259-.014-3.668-.072-4.948-.058-1.279-.316-2.399-1.266-3.349-.95-.95-2.07-1.208-3.349-1.266C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324A6.162 6.162 0 0 0 12 5.838zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998zm6.406-11.845a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+    <a href="TU_ENLACE_INSTAGRAM" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram">
     </a>
   </div>
 
@@ -136,7 +121,7 @@
     <button id="downloadBtn">⬇️ Descargar</button>
   </div>
 
-  <div style="margin-bottom: 10px; font-weight: bold;">Comparte tu afiche</div>
+  <div class="comparte-texto">Comparte tu afiche</div>
   <div class="social-buttons">
     <button id="whatsappBtn">📱 WhatsApp</button>
     <button id="facebookBtn">📘 Facebook</button>
@@ -179,24 +164,34 @@
       }
     };
 
-    function dibujarTextoMultilinea(ctx, texto, x, y, maxWidth, lineHeight) {
-      const palabras = texto.split(' ');
-      let linea = '';
-      const lineas = [];
+    function dibujarTextoMultilinea(ctx, texto, x, y, maxWidth, lineHeight, maxFontSize) {
+      let fontSize = maxFontSize || parseInt(ctx.font.match(/\d+/)[0]);
+      ctx.font = ctx.font.replace(/\d+px/, `${fontSize}px`);
 
-      for (let palabra of palabras) {
-        const prueba = linea + palabra + ' ';
-        if (ctx.measureText(prueba).width > maxWidth && linea !== '') {
-          lineas.push(linea.trim());
-          linea = palabra + ' ';
-        } else {
-          linea = prueba;
+      let palabras = texto.split(' ');
+      let lineas = [];
+      let linea = '';
+
+      while (fontSize > 10) {
+        lineas = [];
+        linea = '';
+        for (let palabra of palabras) {
+          const prueba = linea + palabra + ' ';
+          if (ctx.measureText(prueba).width > maxWidth && linea !== '') {
+            lineas.push(linea.trim());
+            linea = palabra + ' ';
+          } else {
+            linea = prueba;
+          }
         }
+        lineas.push(linea.trim());
+        if (lineas.length * lineHeight <= 150 || fontSize <= 20) break;
+        fontSize -= 2;
+        ctx.font = ctx.font.replace(/\d+px/, `${fontSize}px`);
       }
-      lineas.push(linea.trim());
+
       const totalHeight = lineas.length * lineHeight;
       const startY = y - totalHeight / 2 + lineHeight / 2;
-
       lineas.forEach((l, i) => ctx.fillText(l, x, startY + i * lineHeight));
     }
 
@@ -211,10 +206,10 @@
       ctx.font = plantilla.fuenteTexto;
       dibujarTextoMultilinea(ctx, plantilla.fraseSuperior, canvas.width / 2, 100, 520, 45);
 
-      // Nombre mascota
+      // Nombre mascota con ajuste de tamaño si es muy largo
       const nombre = (nombreInput.value || 'Tu mascota').toUpperCase();
       ctx.font = plantilla.fuenteTitulo;
-      dibujarTextoMultilinea(ctx, `${nombre} DICE`, canvas.width / 2, 250, 520, 60);
+      dibujarTextoMultilinea(ctx, `${nombre} DICE`, canvas.width / 2, 250, 520, 60, 60);
 
       // Foto circular
       const circleX = canvas.width / 2;
@@ -228,41 +223,36 @@
       ctx.stroke();
 
       if (foto) {
-        const scale = Math.max(
-          (circleRadius * 2) / foto.width,
-          (circleRadius * 2) / foto.height
-        );
+        const scale = Math.max((circleRadius * 2) / foto.width, (circleRadius * 2) / foto.height);
         const imgWidth = foto.width * scale;
         const imgHeight = foto.height * scale;
         const imgX = circleX - imgWidth / 2;
         const imgY = circleY - imgHeight / 2;
-
         ctx.save();
         ctx.beginPath();
         ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
-        ctx.closePath();
         ctx.clip();
         ctx.drawImage(foto, imgX, imgY, imgWidth, imgHeight);
         ctx.restore();
       }
 
-      // Texto “NO”
+      // NO y A LA CONSTITUYENTE más juntos
       ctx.fillStyle = plantilla.colorNo;
       ctx.font = 'bold 100px Arial';
-      ctx.fillText('NO', canvas.width / 2, 850);
+      ctx.fillText('NO', canvas.width / 2, 820);
+      ctx.font = 'bold 32px Arial';
+      ctx.fillText('A LA CONSTITUYENTE', canvas.width / 2, 880);
 
-      // Frase inferior, subida unos píxeles
+      // Frase inferior más grande
       ctx.fillStyle = plantilla.colorTexto;
-      ctx.font = 'bold 30px Arial';
-      dibujarTextoMultilinea(ctx, 'A LA CONSTITUYENTE', canvas.width / 2, 920, 500, 35);
-      ctx.font = '20px Arial';
-      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 970 - 20, 500, 28); // -20 para subir
+      ctx.font = '22px Arial';
+      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 960, 500, 28);
 
-      // Logo en esquina inferior derecha, bajado unos píxeles
+      // Logo un poco más abajo
       if (logoImagen.complete) {
         const logoWidth = 120;
         const logoHeight = (logoImagen.height / logoImagen.width) * logoWidth;
-        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 5, logoWidth, logoHeight); // +15 para bajar
+        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 10, logoWidth, logoHeight);
       }
     }
 
@@ -292,9 +282,7 @@
 
     // Botones compartir
     whatsappBtn.addEventListener('click', () => {
-      const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent('Mira el afiche que generé con mi mascota 🐾 #NoALaConstituyente');
-      window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
+      alert('Para compartir en WhatsApp, primero debes descargar la imagen y enviarla desde tu teléfono.');
     });
 
     facebookBtn.addEventListener('click', () => {
