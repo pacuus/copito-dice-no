@@ -90,6 +90,7 @@
   <img id="logo" src="logo.png" alt="Logo del movimiento" />
 
   <div class="redes-pagina">
+    <!-- Reemplaza los href con tus enlaces -->
     <a href="https://www.facebook.com/mjcrio" target="_blank">
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook">
     </a>
@@ -141,9 +142,6 @@
     let foto = null;
     let logoImagen = new Image();
     logoImagen.src = 'logo.png';
-
-    let qrImagen = new Image();
-    qrImagen.src = 'qr.png'; // QR pre-generado en el repositorio
 
     const plantillas = {
       A: {
@@ -238,14 +236,14 @@
         ctx.restore();
       }
 
-      // Bloque "NO A LA CONSTITUYENTE"
+      // Bloque "NO A LA CONSTITUYENTE" (bajado)
       ctx.fillStyle = plantilla.colorNo;
       ctx.font = 'bold 120px Arial';
       ctx.fillText('NO', canvas.width / 2, 800);
       ctx.font = 'bold 40px Arial';
       ctx.fillText('A LA CONSTITUYENTE', canvas.width / 2, 870);
 
-      // Frase inferior
+      // Frase inferior (subida para quedar cerca del bloque anterior)
       ctx.fillStyle = plantilla.colorTexto;
       ctx.font = '28px Arial';
       dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 960, 520, 32);
@@ -256,14 +254,9 @@
         const logoHeight = (logoImagen.height / logoImagen.width) * logoWidth;
         ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight + 15, logoWidth, logoHeight);
       }
-
-      // QR en la esquina inferior izquierda
-      if (qrImagen.complete) {
-        const qrSize = 130;
-        ctx.drawImage(qrImagen, 20, canvas.height - qrSize - 20, qrSize, qrSize);
-      }
     }
 
+    // Eventos
     nombreInput.addEventListener('input', dibujar);
     plantillaSelect.addEventListener('change', dibujar);
     fotoInput.addEventListener('change', (e) => {
@@ -279,7 +272,6 @@
     });
 
     logoImagen.onload = dibujar;
-    qrImagen.onload = dibujar;
 
     downloadBtn.addEventListener('click', () => {
       const link = document.createElement('a');
