@@ -236,23 +236,23 @@
         ctx.restore();
       }
 
-      // Texto "NO A LA CONSTITUYENTE"
+      // NO y A LA CONSTITUYENTE más grandes y más arriba
       ctx.fillStyle = plantilla.colorNo;
       ctx.font = 'bold 120px Arial';
       ctx.fillText('NO', canvas.width / 2, 780);
       ctx.font = 'bold 40px Arial';
       ctx.fillText('A LA CONSTITUYENTE', canvas.width / 2, 845);
 
-      // Frase inferior (más grande y más abajo)
+      // Frase inferior más grande y más abajo
       ctx.fillStyle = plantilla.colorTexto;
       ctx.font = '26px Arial';
-      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 1040, 520, 32);
+      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 1020, 520, 32);
 
-      // Logo (20 píxeles más abajo)
+      // Logo un poco más abajo
       if (logoImagen.complete) {
         const logoWidth = 120;
         const logoHeight = (logoImagen.height / logoImagen.width) * logoWidth;
-        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight + 15, logoWidth, logoHeight);
+        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 5, logoWidth, logoHeight);
       }
     }
 
@@ -282,7 +282,7 @@
 
     // Botones compartir
     whatsappBtn.addEventListener('click', () => {
-      alert('Para compartir en WhatsApp, primero descarga la imagen y envíala desde tu teléfono.');
+      alert('Para compartir en WhatsApp, primero debes descargar la imagen y enviarla desde tu teléfono.');
     });
 
     facebookBtn.addEventListener('click', () => {
