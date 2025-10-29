@@ -236,23 +236,23 @@
         ctx.restore();
       }
 
-      // NO y A LA CONSTITUYENTE más grandes y más arriba
+      // Bloque "NO A LA CONSTITUYENTE" (bajado)
       ctx.fillStyle = plantilla.colorNo;
       ctx.font = 'bold 120px Arial';
-      ctx.fillText('NO', canvas.width / 2, 780);
+      ctx.fillText('NO', canvas.width / 2, 760);
       ctx.font = 'bold 40px Arial';
-      ctx.fillText('A LA CONSTITUYENTE', canvas.width / 2, 845);
+      ctx.fillText('A LA CONSTITUYENTE', canvas.width / 2, 830);
 
-      // Frase inferior más grande y más abajo
+      // Frase inferior (subida para quedar cerca del bloque anterior)
       ctx.fillStyle = plantilla.colorTexto;
-      ctx.font = '26px Arial';
-      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 1020, 520, 32);
+      ctx.font = '28px Arial';
+      dibujarTextoMultilinea(ctx, plantilla.fraseInferior, canvas.width / 2, 860, 520, 32);
 
-      // Logo un poco más abajo
+      // Logo
       if (logoImagen.complete) {
         const logoWidth = 120;
         const logoHeight = (logoImagen.height / logoImagen.width) * logoWidth;
-        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight - 5, logoWidth, logoHeight);
+        ctx.drawImage(logoImagen, canvas.width - logoWidth - 20, canvas.height - logoHeight + 15, logoWidth, logoHeight);
       }
     }
 
@@ -280,9 +280,8 @@
       link.click();
     });
 
-    // Botones compartir
     whatsappBtn.addEventListener('click', () => {
-      alert('Para compartir en WhatsApp, primero debes descargar la imagen y enviarla desde tu teléfono.');
+      alert('Para compartir en WhatsApp, primero descarga la imagen y envíala desde tu teléfono.');
     });
 
     facebookBtn.addEventListener('click', () => {
